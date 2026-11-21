@@ -127,6 +127,12 @@
   .box.planb .lead { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
   .mini-tl { margin-top: 8px; }
   .mini-tl .card { background: var(--paper); }
+  @keyframes inL { from { opacity: .3; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+  @keyframes inR { from { opacity: .3; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+  .swipe-l { animation: inL .22s ease-out; }
+  .swipe-r { animation: inR .22s ease-out; }
+  .swipe-hint { text-align: center; font-size: 12px; color: var(--muted); margin: 0 0 10px; }
+  @media (hover: hover) { .swipe-hint { display: none; } }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -158,6 +164,7 @@
 </nav>
 
 <main>
+  <p class="swipe-hint">← 左右にスワイプで切り替え →</p>
   <!-- ===== 1日目 ===== -->
   <section id="p-1" role="tabpanel" aria-labelledby="tab-1" data-day="2026-11-22">
     <div class="day-head">
@@ -652,6 +659,29 @@
     window.scrollTo(0, 0);
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.id); }); });
+  // スワイプでタブ切り替え（左へスワイプ→次、右へスワイプ→前）
+  var order = tabs.map(function (t) { return t.id; });
+  var main = document.querySelector('main');
+  var sx = 0, sy = 0, st = 0, tracking = false;
+  main.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) { tracking = false; return; }
+    sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); tracking = true;
+  }, { passive: true });
+  main.addEventListener('touchend', function (e) {
+    if (!tracking) return; tracking = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - st > 800) return;
+    var cur = order.indexOf(tabs.filter(function (b) { return b.getAttribute('aria-selected') === 'true'; })[0].id);
+    var next = dx < 0 ? cur + 1 : cur - 1;
+    if (next < 0 || next >= order.length) return;
+    show(order[next]);
+    var panel = document.getElementById(document.getElementById(order[next]).getAttribute('aria-controls'));
+    panel.classList.remove('swipe-l', 'swipe-r'); void panel.offsetWidth;
+    panel.classList.add(dx < 0 ? 'swipe-l' : 'swipe-r');
+    document.getElementById(order[next]).scrollIntoView({ block: 'nearest', inline: 'center' });
+  }, { passive: true });
+
   document.querySelectorAll('[data-go]').forEach(function (a) {
     a.addEventListener('click', function (e) { e.preventDefault(); show(a.getAttribute('data-go')); });
   });
