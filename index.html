@@ -71,9 +71,9 @@
 
   /* タイムライン */
   .tl { list-style: none; margin: 0; padding: 0; position: relative; }
-  .tl::before { content: ""; position: absolute; left: 47px; top: 10px; bottom: 10px; width: 2px; background: var(--hair); }
-  .tl li { display: grid; grid-template-columns: 56px 1fr; gap: 10px; margin-bottom: 12px; position: relative; }
-  .time { font-weight: 700; font-size: 14px; text-align: right; padding-top: 12px; padding-right: 14px; position: relative; font-variant-numeric: tabular-nums; }
+  .tl::before { content: ""; position: absolute; left: 60px; top: 10px; bottom: 10px; width: 2px; background: var(--hair); }
+  .tl li { display: grid; grid-template-columns: 72px 1fr; gap: 10px; margin-bottom: 12px; position: relative; }
+  .time { font-weight: 700; font-size: 14px; text-align: right; padding-top: 12px; padding-right: 22px; white-space: nowrap; position: relative; font-variant-numeric: tabular-nums; }
   .time::after { content: ""; position: absolute; right: 3px; top: 18px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2.5px solid var(--aka); }
   .tl li.move .time::after { border-color: var(--sumi); }
   .tl li.meal .time::after { border-color: var(--kin); background: var(--kin); }
