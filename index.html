@@ -60,8 +60,8 @@
 
   /* タブ */
   .tabs { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
-  .tabs-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; }
-  .tab { flex: 1 0 auto; border: 1px solid var(--hair); background: var(--surface); border-radius: 999px; padding: 7px 14px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; text-decoration: none; text-align: center; }
+  .tabs-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 6px; padding: 8px 10px; overflow-x: auto; scrollbar-width: none; }
+  .tab { flex: 1 0 auto; border: 1px solid var(--hair); background: var(--surface); border-radius: 999px; padding: 7px 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; white-space: nowrap; text-decoration: none; text-align: center; }
   .tab[aria-selected="true"] { background: var(--aka); border-color: var(--aka); color: #fff; }
   .tab.link { color: var(--aka); border-color: var(--aka); }
 
@@ -114,6 +114,9 @@
   .checks input:checked + span { color: var(--muted); text-decoration: line-through; }
   ul.plain { margin: 0; padding-left: 1.2em; font-size: 14.5px; }
   .foot { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 24px; }
+  .box.spot .lead { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+  .box.spot .actions { margin-top: 10px; }
+  h4.group { font-size: 14px; color: var(--aka); margin: 18px 4px 8px; letter-spacing: .05em; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -138,8 +141,9 @@
   <div class="tabs-inner" role="tablist">
     <button class="tab" role="tab" id="tab-1" aria-controls="p-1" aria-selected="true">1日目</button>
     <button class="tab" role="tab" id="tab-2" aria-controls="p-2" aria-selected="false">2日目</button>
-    <button class="tab" role="tab" id="tab-info" aria-controls="p-info" aria-selected="false">宿・持ち物</button>
-    <a class="tab link" href="./lunch.html">ランチ候補</a>
+    <button class="tab" role="tab" id="tab-more" aria-controls="p-more" aria-selected="false">寄り道</button>
+    <button class="tab" role="tab" id="tab-info" aria-controls="p-info" aria-selected="false">宿・準備</button>
+    <a class="tab link" href="./lunch.html">ランチ</a>
   </div>
 </nav>
 
@@ -205,10 +209,17 @@
         <div class="time">15:30</div>
         <div class="card">
           <span class="tag sumi">任意</span>
-          <h3>七日町通り散策・お土産</h3>
-          <p class="sub">時間が押したら省略</p>
+          <h3>末廣酒造 嘉永蔵・七日町通り</h3>
+          <p class="sub">明治〜大正の酒蔵と、レトロな通りを散策。時間が押したら省略</p>
+          <ul>
+            <li>蔵見学は無料・案内付き。10:00〜16:00の毎時（約30分）→ 16:00の回に間に合う</li>
+            <li>直売所で試飲あり（運転する人は飲めないので注意）</li>
+            <li>蔵カフェは16:00ラストオーダー</li>
+            <li>駐車場あり</li>
+          </ul>
           <div class="actions">
-            <a href="https://www.google.com/maps/search/?api=1&query=%E4%B8%83%E6%97%A5%E7%94%BA%E9%80%9A%E3%82%8A%20%E4%BC%9A%E6%B4%A5%E8%8B%A5%E6%9D%BE"><svg><use href="#i-map"/></svg>地図</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=%E6%9C%AB%E5%BB%A3%E9%85%92%E9%80%A0%20%E5%98%89%E6%B0%B8%E8%94%B5"><svg><use href="#i-map"/></svg>地図</a>
+            <a href="tel:0242270002"><svg><use href="#i-tel"/></svg>電話</a>
           </div>
         </div>
       </li>
@@ -249,11 +260,30 @@
           <p class="sub">2階の会食場「おはら亭」。時間はチェックイン時に指定</p>
         </div>
       </li>
+      <li>
+        <div class="time">9:00</div>
+        <div class="card">
+          <span class="tag sumi">任意</span>
+          <h3>会津武家屋敷（早めに出られたら）</h3>
+          <p class="sub">宿と同じ東山町で車ですぐ。家老・西郷頼母の屋敷を復元した屋外博物館</p>
+          <ul>
+            <li>11月は 8:30〜17:00、大人 約1,000円</li>
+            <li>赤べこ・起き上がり小法師の絵付けや弓道体験もあり</li>
+            <li>無料駐車場 100台</li>
+            <li>寄るなら9:00ごろチェックアウト</li>
+          </ul>
+          <div class="actions">
+            <a href="https://www.google.com/maps/search/?api=1&query=%E4%BC%9A%E6%B4%A5%E6%AD%A6%E5%AE%B6%E5%B1%8B%E6%95%B7"><svg><use href="#i-map"/></svg>地図</a>
+            <a href="tel:0242282525"><svg><use href="#i-tel"/></svg>電話</a>
+          </div>
+        </div>
+      </li>
       <li class="stay">
         <div class="time">10:00</div>
         <div class="card">
           <span class="tag aka">宿</span>
           <h3>チェックアウト</h3>
+          <p class="sub">10:00まで</p>
         </div>
       </li>
       <li>
@@ -288,6 +318,7 @@
         <div class="card">
           <h3>会津若松を出発</h3>
           <p class="sub">東北道の上りが混みやすい日。渋滞情報を見て調整</p>
+          <div class="actions"><a href="#" data-go="tab-more">帰り道の寄り道候補</a></div>
         </div>
       </li>
       <li class="move">
@@ -298,6 +329,88 @@
         </div>
       </li>
     </ol>
+  </section>
+
+  <!-- ===== 寄り道候補 ===== -->
+  <section id="p-more" role="tabpanel" aria-labelledby="tab-more" hidden>
+    <div class="day-head">
+      <h2>寄り道候補</h2>
+      <p>時間が空いたとき・帰り道に。行けそうなものを日程に足す</p>
+    </div>
+
+    <h4 class="group">市内（鶴ヶ城の近く）</h4>
+    <div class="box spot">
+      <h3>御薬園（会津松平氏庭園）</h3>
+      <p class="lead">歴代藩主の別荘だった回遊式庭園。鶴ヶ城の東すぐで、2日目に鶴ヶ城と合わせやすい</p>
+      <ul class="plain">
+          <li>8:30〜17:00（入園は16:30まで）、無休</li>
+          <li>大人330円。御茶屋御殿でお抹茶（600円）</li>
+          <li>無料駐車場 40台</li>
+          <li>園内に照明がないので、夕方より昼間に</li>
+      </ul>
+      <div class="actions">
+        <a href="https://www.google.com/maps/search/?api=1&query=%E5%BE%A1%E8%96%AC%E5%9C%92%20%E4%BC%9A%E6%B4%A5%E8%8B%A5%E6%9D%BE"><svg><use href="#i-map"/></svg>地図</a>
+        <a href="tel:0242272472"><svg><use href="#i-tel"/></svg>電話</a>
+      </div>
+    </div>
+    <div class="box spot">
+      <h3>会津武家屋敷</h3>
+      <p class="lead">家老・西郷頼母の屋敷（38部屋）や陣屋などが並ぶ屋外博物館。ホテルと同じ東山町</p>
+      <ul class="plain">
+          <li>11月は 8:30〜17:00、大人 約1,000円</li>
+          <li>赤べこ・起き上がり小法師の絵付け、弓道体験あり</li>
+          <li>食事処「九曜亭」とお土産処は入館せずに利用可</li>
+          <li>無料駐車場 100台</li>
+      </ul>
+      <div class="actions">
+        <a href="https://www.google.com/maps/search/?api=1&query=%E4%BC%9A%E6%B4%A5%E6%AD%A6%E5%AE%B6%E5%B1%8B%E6%95%B7"><svg><use href="#i-map"/></svg>地図</a>
+        <a href="tel:0242282525"><svg><use href="#i-tel"/></svg>電話</a>
+      </div>
+    </div>
+    <div class="box spot">
+      <h3>末廣酒造 嘉永蔵</h3>
+      <p class="lead">1850年創業の酒蔵。国の登録有形文化財の蔵を案内付きで見学</p>
+      <ul class="plain">
+          <li>9:30〜16:30、第2水曜休み</li>
+          <li>蔵見学は無料、10:00〜16:00の毎時（約30分）</li>
+          <li>試飲・蔵限定酒の購入、蔵カフェ「杏」あり</li>
+          <li>駐車場あり</li>
+      </ul>
+      <div class="actions">
+        <a href="https://www.google.com/maps/search/?api=1&query=%E6%9C%AB%E5%BB%A3%E9%85%92%E9%80%A0%20%E5%98%89%E6%B0%B8%E8%94%B5"><svg><use href="#i-map"/></svg>地図</a>
+        <a href="tel:0242270002"><svg><use href="#i-tel"/></svg>電話</a>
+      </div>
+    </div>
+
+    <h4 class="group">帰り道（2日目の午後）</h4>
+    <div class="box spot">
+      <h3>野口英世記念館（猪苗代）</h3>
+      <p class="lead">帰りの磐越道の途中。猪苗代磐梯高原ICから約5分なので、寄り道しやすい</p>
+      <ul class="plain">
+          <li>11月は 9:00〜16:30（入館は16:00まで）、無休</li>
+          <li>大人1,200円（感染症ミュージアムと共通）</li>
+          <li>見学 40〜50分。生家や「母シカの手紙」、アンドロイドも</li>
+          <li>無料駐車場 200台</li>
+          <li>寄ると横浜着は1時間ほど遅くなる目安</li>
+      </ul>
+      <div class="actions">
+        <a href="https://www.google.com/maps/search/?api=1&query=%E9%87%8E%E5%8F%A3%E8%8B%B1%E4%B8%96%E8%A8%98%E5%BF%B5%E9%A4%A8"><svg><use href="#i-map"/></svg>地図</a>
+        <a href="tel:0242652319"><svg><use href="#i-tel"/></svg>電話</a>
+      </div>
+    </div>
+    <div class="box spot">
+      <h3>大内宿（ねぎそば）</h3>
+      <p class="lead">茅葺き屋根の宿場町。ねぎ1本を箸代わりにする「ねぎそば」が名物。2日目の昼食をここにするプラン</p>
+      <ul class="plain">
+          <li>会津若松ICから車で約60分（南へ）</li>
+          <li>帰りは白河ICから東北道へ（約70分）</li>
+          <li>車は大内宿の駐車場を利用（各店に駐車場はない）</li>
+          <li>連休は混雑しやすい。帰りが遅くなるので出発は早めに</li>
+      </ul>
+      <div class="actions">
+        <a href="https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E5%86%85%E5%AE%BF"><svg><use href="#i-map"/></svg>地図</a>
+      </div>
+    </div>
   </section>
 
   <!-- ===== 宿・持ち物 ===== -->
@@ -371,6 +484,9 @@
     window.scrollTo(0, 0);
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.id); }); });
+  document.querySelectorAll('[data-go]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); show(a.getAttribute('data-go')); });
+  });
 
   var today = new Date();
   var ymd = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
