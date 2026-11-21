@@ -55,6 +55,7 @@
   .day.ng { background: var(--aka-soft); color: var(--aka); }
   .day.q { background: var(--kin-soft); color: var(--kin); }
   .memo { margin: 0; font-size: 14px; }
+  .actions a.detail { background: var(--aka); border-color: var(--aka); color: #fff; }
   .foot { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 24px; }
 </style>
 </head>
@@ -96,7 +97,7 @@
   // d1 / d2: その日に行けるか（true=営業 / false=休み / null=要確認）
   var GENRES = ['郷土料理・わっぱ飯', 'ソースカツ丼', 'そば', '喜多方ラーメン'];
   var SHOPS = [
-    { genre: '郷土料理・わっぱ飯', name: '田季野（たきの）', area: '栄町（市役所近く）',
+    { genre: '郷土料理・わっぱ飯', name: '田季野（たきの）', url: 'https://www.yukoyuko.net/onsen/spot/s0000928', area: '栄町（市役所近く）',
       hours: '11:00〜（日曜は19:00まで）', closed: '無休', parking: '無料18台',
       memo: 'わっぱ飯の元祖。旧家を移築した店。そばとわっぱ飯の「会津セット」も', d1: true, d2: true, pick: 0 },
     { genre: '郷土料理・わっぱ飯', name: '会津料理 鶴井筒', area: '東山町（会津武家屋敷の前）',
@@ -108,22 +109,22 @@
     { genre: '郷土料理・わっぱ飯', name: '満田屋（みつたや）', area: '大町（七日町通り近く）',
       hours: '10:30〜16:30', closed: '水曜', parking: '15台',
       memo: '囲炉裏で焼く味噌田楽の店。軽めのお昼や、七日町散策のおやつにも', tel: '0242-27-1345', d1: true, d2: true, pick: 0 },
-    { genre: 'ソースカツ丼', name: '白孔雀食堂', area: '宮町',
+    { genre: 'ソースカツ丼', name: '白孔雀食堂', url: 'https://www.tobu.co.jp/odekake/enjoy/aizu/01.html', area: '宮町',
       hours: '11:00〜15:00', closed: '月・金', parking: '5台',
       memo: '1947年創業。メニューはソースカツ丼のみ、器からはみ出すカツ。名物カツ丼1,600円', d1: true, d2: false, pick: 0 },
     { genre: 'ソースカツ丼', name: 'とん亭', area: '天寧寺町（HHTの近く）',
       hours: '要確認（売り切れ次第終了）', closed: '月曜（ほかにも休みあり）', parking: 'あり',
       memo: '1972年創業のソースかつ専門店。継ぎ足しの特製ソース。馬肉の「八重うまっソースかつ丼」も', tel: '0242-27-2191', d1: true, d2: false, pick: 0 },
-    { genre: 'ソースカツ丼', name: 'とんかつ番番', area: '東千石（飯盛山の近く）',
+    { genre: 'ソースカツ丼', name: 'とんかつ番番', url: 'https://www.gltjp.com/ja/directory/item/17789/', area: '東千石（飯盛山の近く）',
       hours: '11:00〜14:30', closed: '水曜', parking: '要確認',
       memo: '1978年創業のとんかつ専門店。甘めの秘伝ソース、お米は会津産コシヒカリ。特上ソースカツ丼2,400円〜。予約できる。1日目、飯盛山の前に寄りやすい', tel: '0242-27-6327', d1: true, d2: true, pick: 0 },
-    { genre: 'ソースカツ丼', name: '卯之家（うのや）', area: '東山温泉（宿の近く）',
+    { genre: 'ソースカツ丼', name: '卯之家（うのや）', url: 'https://www.hotpepper.jp/strJ000101581/', area: '東山温泉（宿の近く）',
       hours: '11:00〜14:00', closed: '月1〜2回の不定休', parking: '要確認',
       memo: 'ソースカツ丼810円。ソースカツ丼・半ラーメン・さくら刺しの「卯之家セット」1,250円で会津名物を一度に', d1: true, d2: true, pick: 0 },
     { genre: 'そば', name: '桐屋・権現亭', area: '上町',
       hours: '11:00〜15:00（土日祝は16:00まで）', closed: '水曜', parking: 'あり',
       memo: '会津屈指のこだわりそば。3種類を食べ比べる「そば三昧」、在来種「会津のかおり」1,760円', d1: true, d2: true, pick: 0 },
-    { genre: 'そば', name: '會津おにやんま', area: '慶山（HHTのすぐ近く）',
+    { genre: 'そば', name: '會津おにやんま', url: 'https://www.instagram.com/aizu.oniyanma_soba/?hl=ja', area: '慶山（HHTのすぐ近く）',
       hours: '10:00〜15:00', closed: '火・水・金（月ごとに営業日の案内あり）', parking: '要確認',
       memo: '古民家の雰囲気のそば店。すだちそば・だし巻き玉子が人気。そば湯と寒天はセルフ。売り切れることがあるので早めに。2日目のHHTとセットにしやすい', tel: '0242-85-7789', d1: true, d2: true, pick: 0 },
     { genre: '喜多方ラーメン', name: '古川農園', area: '会津若松ICから車で約5分',
@@ -156,7 +157,7 @@
         '<div class="days">' + ok(s.d1, '1日目(日)') + ok(s.d2, '2日目(祝)') + '</div>' +
         '<p class="memo">' + esc(s.memo) + '</p>' +
         '<dl>' + rows + '</dl>' +
-        '<div class="actions"><a href="' + map + '">地図</a>' + tel + '</div></article>';
+        '<div class="actions">' + (s.url ? '<a class="detail" href="' + s.url + '" target="_blank" rel="noopener">詳細を見る</a>' : '') + '<a href="' + map + '">地図</a>' + tel + '</div></article>';
     }).join('');
   }).join('');
   [1, 2].forEach(function (n) {
