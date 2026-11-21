@@ -48,6 +48,13 @@
   .actions a { font-size: 13.5px; font-weight: 700; text-decoration: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--hair); background: var(--paper); }
   .empty-box { border: 1.5px dashed var(--hair); border-radius: 14px; padding: 20px 14px; text-align: center; color: var(--muted); font-size: 14.5px; }
   ul.tips { margin: 0; padding-left: 1.2em; font-size: 14.5px; }
+  h3.genre-h { font-family: var(--serif); font-size: 16px; color: var(--aka); margin: 18px 4px 8px; }
+  .days { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 6px; }
+  .day { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
+  .day.ok { background: #e5f4e4; color: #2d6a2b; }
+  .day.ng { background: var(--aka-soft); color: var(--aka); }
+  .day.q { background: var(--kin-soft); color: var(--kin); }
+  .memo { margin: 0; font-size: 14px; }
   .foot { color: var(--muted); font-size: 12.5px; text-align: center; margin-top: 24px; }
 </style>
 </head>
@@ -65,7 +72,7 @@
   <h2>決定</h2>
   <div class="decided">
     <div class="dec"><div class="d">1日目 11/22（日）12:00頃</div><div class="n" id="dec1"></div></div>
-    <div class="dec"><div class="d">2日目 11/23（月・祝）12:00頃</div><div class="n" id="dec2"></div></div>
+    <div class="dec"><div class="d">2日目 11/23（月・祝）12:15頃</div><div class="n" id="dec2"></div></div>
   </div>
 
   <h2>候補一覧</h2>
@@ -73,8 +80,10 @@
 
   <h2>メモ</h2>
   <ul class="tips">
-    <li>連休なので、人気店は開店直後か予約がおすすめ</li>
-    <li>日曜・祝日が休みのお店でないか確認する</li>
+    <li>1日目は12:00ごろ、2日目は12:15ごろの予定。連休なので人気店は早めに</li>
+    <li>2日目（23日・月曜祝日）は、月曜定休の店が休みの場合が多い</li>
+    <li>2日目はHHTのカフェで食べる案もあり</li>
+    <li>営業時間は変わることがあるので、行く前に確認</li>
   </ul>
 
   <p class="foot">営業時間・定休日は変わることがあります。出かける前に確認してください。</p>
@@ -82,33 +91,71 @@
 
 <script>
 (function () {
-  // ===== ここに候補を書き足すとページに表示されます =====
-  // day: 1 か 2 を入れると「決定」に表示されます（未定なら 0）
+  // ===== ここを書き換えるとページに反映されます =====
+  // pick: 1 か 2 を入れると「決定」に表示（未定は 0）
+  // d1 / d2: その日に行けるか（true=営業 / false=休み / null=要確認）
+  var GENRES = ['郷土料理・わっぱ飯', 'ソースカツ丼', 'そば', '喜多方ラーメン'];
   var SHOPS = [
-    // { name: '店名', genre: 'ソースカツ丼', area: '七日町', hours: '11:00〜15:00', closed: '水曜', parking: 'あり', memo: '', map: '店名 会津若松', day: 0 },
+    { genre: '郷土料理・わっぱ飯', name: '田季野（たきの）', area: '栄町（市役所近く）',
+      hours: '11:00〜（日曜は19:00まで）', closed: '無休', parking: '無料18台',
+      memo: 'わっぱ飯の元祖。旧家を移築した店。そばとわっぱ飯の「会津セット」も', d1: true, d2: true, pick: 0 },
+    { genre: '郷土料理・わっぱ飯', name: '会津料理 鶴井筒', area: '東山町（会津武家屋敷の前）',
+      hours: '要確認', closed: '要確認', parking: '要確認',
+      memo: '2日目の武家屋敷・HHTから近い。「会津の味丸かじり膳」1,650円〜', d1: null, d2: null, pick: 0 },
+    { genre: '郷土料理・わっぱ飯', name: '渋川問屋', area: '七日町（七日町駅すぐ）',
+      hours: '11:00〜15:00（最終入店14:30）', closed: '年中無休', parking: '要確認',
+      memo: '明治の海産物問屋の蔵で食べる郷土料理。「祭り御膳」など。昼2,600円〜', tel: '0242-28-4000', d1: true, d2: true, pick: 0 },
+    { genre: '郷土料理・わっぱ飯', name: '満田屋（みつたや）', area: '大町（七日町通り近く）',
+      hours: '10:30〜16:30', closed: '水曜', parking: '15台',
+      memo: '囲炉裏で焼く味噌田楽の店。軽めのお昼や、七日町散策のおやつにも', tel: '0242-27-1345', d1: true, d2: true, pick: 0 },
+    { genre: 'ソースカツ丼', name: '白孔雀食堂', area: '宮町',
+      hours: '11:00〜15:00', closed: '月・金', parking: '5台',
+      memo: '1947年創業。メニューはソースカツ丼のみ、器からはみ出すカツ。名物カツ丼1,600円', d1: true, d2: false, pick: 0 },
+    { genre: 'ソースカツ丼', name: 'とん亭', area: '天寧寺町（HHTの近く）',
+      hours: '要確認（売り切れ次第終了）', closed: '月曜（ほかにも休みあり）', parking: 'あり',
+      memo: '1972年創業のソースかつ専門店。継ぎ足しの特製ソース。馬肉の「八重うまっソースかつ丼」も', tel: '0242-27-2191', d1: true, d2: false, pick: 0 },
+    { genre: 'ソースカツ丼', name: '卯之家（うのや）', area: '東山温泉（宿の近く）',
+      hours: '11:00〜14:00', closed: '月1〜2回の不定休', parking: '要確認',
+      memo: 'ソースカツ丼810円。ソースカツ丼・半ラーメン・さくら刺しの「卯之家セット」1,250円で会津名物を一度に', d1: true, d2: true, pick: 0 },
+    { genre: 'そば', name: '桐屋・権現亭', area: '上町',
+      hours: '11:00〜15:00（土日祝は16:00まで）', closed: '水曜', parking: 'あり',
+      memo: '会津屈指のこだわりそば。3種類を食べ比べる「そば三昧」、在来種「会津のかおり」1,760円', d1: true, d2: true, pick: 0 },
+    { genre: '喜多方ラーメン', name: '古川農園', area: '会津若松ICから車で約5分',
+      hours: '要確認', closed: '要確認', parking: 'あり',
+      memo: 'さっぱり醤油の喜多方ラーメン。高速を降りてすぐなので1日目の到着時に寄りやすい', d1: null, d2: null, pick: 0 },
+    { genre: '喜多方ラーメン', name: 'うえんで 本店', area: '大戸町（芦ノ牧温泉駅近く）',
+      hours: '9:00〜15:00', closed: '火曜', parking: 'あり',
+      memo: '1972年創業。極太ちぢれ麺と会津山塩のラーメン。休日は行列が長いことも。市街から南へ離れている', tel: '0242-92-3253', d1: true, d2: true, pick: 0 }
   ];
   // ===============================================
 
   function esc(t) { var d = document.createElement('div'); d.textContent = t == null ? '' : String(t); return d.innerHTML; }
+  function ok(v, label) {
+    var cls = v === true ? 'ok' : v === false ? 'ng' : 'q';
+    var txt = v === true ? '○' : v === false ? '休み' : '要確認';
+    return '<span class="day ' + cls + '">' + label + ' ' + txt + '</span>';
+  }
   var list = document.getElementById('list');
-  if (!SHOPS.length) {
-    list.innerHTML = '<div class="empty-box">候補はこれから追加します</div>';
-  } else {
-    list.innerHTML = SHOPS.map(function (s) {
-      var rows = [['場所', s.area], ['営業時間', s.hours], ['定休日', s.closed], ['駐車場', s.parking], ['メモ', s.memo]]
+  list.innerHTML = GENRES.map(function (g) {
+    var items = SHOPS.filter(function (s) { return s.genre === g; });
+    if (!items.length) return '';
+    return '<h3 class="genre-h">' + esc(g) + '</h3>' + items.map(function (s) {
+      var rows = [['場所', s.area], ['営業時間', s.hours], ['定休日', s.closed], ['駐車場', s.parking]]
         .filter(function (r) { return r[1]; })
         .map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('');
-      var map = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.map || s.name + ' 会津若松');
+      var map = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.name.replace(/（.*?）/g, '') + ' 会津若松');
+      var tel = s.tel ? '<a href="tel:' + s.tel.replace(/-/g, '') + '">電話</a>' : '';
       return '<article class="shop">' +
-        (s.genre ? '<span class="genre">' + esc(s.genre) + '</span>' : '') +
-        '<h3>' + esc(s.name) + (s.day ? '<span class="pick">' + s.day + '日目</span>' : '') + '</h3>' +
-        (rows ? '<dl>' + rows + '</dl>' : '') +
-        '<div class="actions"><a href="' + map + '">地図</a></div></article>';
+        '<h3>' + esc(s.name) + (s.pick ? '<span class="pick">' + s.pick + '日目</span>' : '') + '</h3>' +
+        '<div class="days">' + ok(s.d1, '1日目(日)') + ok(s.d2, '2日目(祝)') + '</div>' +
+        '<p class="memo">' + esc(s.memo) + '</p>' +
+        '<dl>' + rows + '</dl>' +
+        '<div class="actions"><a href="' + map + '">地図</a>' + tel + '</div></article>';
     }).join('');
-  }
+  }).join('');
   [1, 2].forEach(function (n) {
     var el = document.getElementById('dec' + n);
-    var s = SHOPS.filter(function (x) { return x.day === n; })[0];
+    var s = SHOPS.filter(function (x) { return x.pick === n; })[0];
     el.textContent = s ? s.name : '未定';
     if (!s) el.classList.add('empty');
   });
